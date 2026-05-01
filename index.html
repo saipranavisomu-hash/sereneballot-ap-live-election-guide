@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SereneBallot AP - Election Process Explainer</title>
+  <style>
+    :root {
+      --bg: #17261d;
+      --bg-soft: #223629;
+      --surface: rgba(44, 66, 52, 0.62);
+      --surface-strong: rgba(37, 58, 46, 0.95);
+      --text: #f4f6ef;
+      --muted: #c2ccb8;
+      --line: rgba(183, 201, 176, 0.25);
+      --primary: #91a982;
+      --primary-strong: #7f9a72;
+      --accent: #bcae8f;
+      --success: #34d399;
+      --danger: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 12% 8%, rgba(167, 195, 154, 0.25), transparent 55%),
+        radial-gradient(900px 600px at 90% 24%, rgba(192, 176, 143, 0.2), transparent 58%),
+        linear-gradient(160deg, #131f17 0%, #1c2d21 42%, #15251b 100%);
+      line-height: 1.5;
+    }
+
+    .container {
+      width: min(1120px, 92%);
+      margin: 0 auto;
+      padding: 24px 0 30px;
+    }
+
+    .hero-shell {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: linear-gradient(145deg, rgba(36, 55, 43, 0.9), rgba(29, 45, 35, 0.95));
+      box-shadow: 0 20px 40px rgba(10, 19, 13, 0.5);
+      overflow: hidden;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(24, 39, 30, 0.7);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(145, 169, 130, 0.12);
+      color: #ecf2e2;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+    }
+
+    .chip.active {
+      background: linear-gradient(120deg, rgba(145, 169, 130, 0.35), rgba(188, 174, 143, 0.28));
+      border-color: rgba(183, 201, 176, 0.5);
+    }
+
+    .hero {
+      text-align: center;
+      padding: 44px 20px 34px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(183, 201, 176, 0.4);
+      background: rgba(145, 169, 130, 0.15);
+      color: #eff5e6;
+      border-radius: 999px;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4.3vw, 3.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+    }
+
+    .hero h1 .gradient {
+      background: linear-gradient(100deg, #d8c8a8 0%, #b4c9a5 55%, #f0e5cf 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      margin: 14px auto 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .hero-actions {
+      margin-top: 22px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+
+    .btn.primary {
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(79, 119, 255, 0.35);
+    }
+
+    .btn.secondary {
+      color: #edf3e3;
+      background: rgba(255, 255, 255, 0.02);
+      border-color: var(--line);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .stats {
+      margin: 26px auto 0;
+      width: min(930px, 100%);
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #d7e4cd;
+      line-height: 1.2;
+    }
+
+    .stat .label {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .app-card {
+      margin-top: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface-strong);
+      overflow: hidden;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tab-btn {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      color: #edf3e3;
+      border-radius: 999px;
+      padding: 9px 13px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .tab-btn.active {
+      border-color: rgba(183, 201, 176, 0.55);
+      background: linear-gradient(130deg, rgba(145, 169, 130, 0.3), rgba(188, 174, 143, 0.22));
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+      animation: fade 0.16s ease-in;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(2px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .muted {
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .step-grid {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .step-item.completed {
+      border-color: rgba(52, 211, 153, 0.45);
+      background: rgba(52, 211, 153, 0.12);
+    }
+
+    .step-item label {
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .progress-wrap {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 12px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.2s ease;
+    }
+
+    .progress-text {
+      padding: 8px 10px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .timeline {
+      margin-top: 14px;
+      padding-left: 22px;
+      position: relative;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 2px;
+      bottom: 2px;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(145, 169, 130, 0.7), rgba(188, 174, 143, 0.65));
+    }
+
+    .event {
+      position: relative;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 11px 12px;
+    }
+
+    .event::before {
+      content: "";
+      position: absolute;
+      left: -19px;
+      top: 14px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #b9c9ab;
+      box-shadow: 0 0 0 3px rgba(185, 201, 171, 0.22);
+    }
+
+    .event .date {
+      color: #dfebd2;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+    }
+
+    .quiz-card {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .quiz-options {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .quiz-options button {
+      text-align: left;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .quiz-options button:hover {
+      border-color: rgba(183, 201, 176, 0.55);
+      background: rgba(145, 169, 130, 0.16);
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    .feedback.correct {
+      color: var(--success);
+    }
+
+    .feedback.wrong {
+      color: var(--danger);
+    }
+
+    .controls {
+      margin-top: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button.primary {
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      color: #fff;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button.primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    button.ghost {
+      color: #ebf2e1;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 9px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .search-box {
+      margin-top: 12px;
+      width: 100%;
+      max-width: 460px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      font-size: 0.98rem;
+    }
+
+    .search-box::placeholder {
+      color: #adbba4;
+    }
+
+    .glossary-list {
+      margin-top: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .term {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 12px;
+    }
+
+    .term h3 {
+      margin: 0;
+      color: #eff5e6;
+      font-size: 1rem;
+    }
+
+    .term p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .leader-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .leader-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 12px;
+    }
+
+    .leader-card .role {
+      font-size: 0.82rem;
+      color: #d8e5ce;
+      margin-bottom: 4px;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+    }
+
+    .leader-card .name {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .leader-card .scope {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .ref-link {
+      display: inline-block;
+      margin-top: 7px;
+      font-size: 0.84rem;
+      color: #eef5e6;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .ref-link:hover {
+      opacity: 0.85;
+    }
+
+    .update-note {
+      margin-top: 10px;
+      font-size: 0.86rem;
+      color: #d8e5ce;
+    }
+
+    .live-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+
+    .live-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 12px;
+    }
+
+    .live-card h3 {
+      margin: 0 0 6px;
+      font-size: 0.92rem;
+      color: #eaf2df;
+    }
+
+    .live-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .status-badge {
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .status-live {
+      background: rgba(52, 211, 153, 0.14);
+      border-color: rgba(52, 211, 153, 0.4);
+      color: #9df3d2;
+    }
+
+    .status-upcoming {
+      background: rgba(188, 174, 143, 0.2);
+      border-color: rgba(188, 174, 143, 0.45);
+      color: #f0e5cf;
+    }
+
+    .status-ongoing {
+      background: rgba(52, 211, 153, 0.18);
+      border-color: rgba(52, 211, 153, 0.45);
+      color: #b9f6de;
+    }
+
+    .status-completed {
+      background: rgba(248, 113, 113, 0.16);
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #fecaca;
+    }
+
+    .live-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .live-sub {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .admin-panel {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 12px;
+    }
+
+    .admin-panel h3 {
+      margin: 0 0 10px;
+      color: #eaf2df;
+      font-size: 0.96rem;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      margin-bottom: 10px;
+    }
+
+    .form-grid input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      padding: 9px;
+      font-size: 0.9rem;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .mini-btn {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 8px 11px;
+      cursor: pointer;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.02);
+      color: #edf3e3;
+    }
+
+    .mini-btn.primary {
+      background: linear-gradient(120deg, var(--primary), var(--accent));
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .admin-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .admin-row {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .admin-row .meta {
+      color: var(--muted);
+      font-size: 0.83rem;
+    }
+
+    .footer-note {
+      margin: 16px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 760px) {
+      .top-nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .tabs {
+        gap: 7px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero-shell">
+      <div class="top-nav">
+        <div class="brand">SereneBallot AP</div>
+        <div class="chip-row">
+          <span class="chip active">Home</span>
+          <span class="chip">Timeline</span>
+          <span class="chip">Quiz</span>
+          <span class="chip">Glossary</span>
+          <span class="chip">Andhra Pradesh</span>
+        </div>
+      </div>
+
+      <header class="hero">
+        <span class="hero-badge">Peaceful Civic Learning for Andhra Pradesh</span>
+        <h1>Understand Elections <span class="gradient">Like Never Before</span></h1>
+        <p>
+          Follow Andhra Pradesh election steps with guided actions, key dates, interactive quizzes,
+          and simple definitions so every citizen can vote calmly and confidently.
+        </p>
+        <div class="hero-actions">
+          <button class="btn primary" data-goto="process">Start Voter Journey</button>
+          <button class="btn secondary" data-goto="timeline">Explore Timeline</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="value">7</div><div class="label">Guided Steps</div></div>
+          <div class="stat"><div class="value">6</div><div class="label">Timeline Milestones</div></div>
+          <div class="stat"><div class="value">4</div><div class="label">Quiz Questions</div></div>
+          <div class="stat"><div class="value">8+</div><div class="label">Glossary Terms</div></div>
+        </div>
+      </header>
+    </section>
+
+    <section class="app-card">
+      <nav class="tabs" aria-label="Election learning tabs">
+        <button class="tab-btn active" data-tab="process">Step-by-Step Process</button>
+        <button class="tab-btn" data-tab="timeline">Timeline</button>
+        <button class="tab-btn" data-tab="live">Live Election</button>
+        <button class="tab-btn" data-tab="quiz">Quiz</button>
+        <button class="tab-btn" data-tab="glossary">Glossary</button>
+        <button class="tab-btn" data-tab="leaders">Current Leaders</button>
+        <button class="tab-btn" data-tab="admin">Admin Update</button>
+      </nav>
+
+      <section id="process" class="tab-content active">
+        <h2>Step-by-Step Election Process</h2>
+        <p class="muted">Complete each step and track your readiness.</p>
+        <div id="stepList" class="step-grid"></div>
+        <div class="progress-wrap">
+          <div id="progressBar" class="progress-bar"></div>
+          <div id="progressText" class="progress-text">0% complete</div>
+        </div>
+      </section>
+
+      <section id="timeline" class="tab-content">
+        <h2>Election Timeline</h2>
+        <p class="muted">A simple schedule from registration to election day.</p>
+        <div class="timeline" id="timelineList"></div>
+      </section>
+
+      <section id="live" class="tab-content">
+        <h2>Live Election Monitor</h2>
+        <p class="muted">Realtime civic clock and expected next election windows for Andhra Pradesh.</p>
+        <div id="liveGrid" class="live-grid"></div>
+        <p class="muted">Election dates are announced officially by ECI. Countdown uses expected windows until official notification.</p>
+      </section>
+
+      <section id="quiz" class="tab-content">
+        <h2>Quick Quiz</h2>
+        <p class="muted">Test what you learned and improve confidence.</p>
+        <div id="quizArea" class="quiz-card"></div>
+        <div class="controls">
+          <button id="nextBtn" class="primary" disabled>Next Question</button>
+          <button id="restartBtn" class="ghost">Restart Quiz</button>
+        </div>
+      </section>
+
+      <section id="glossary" class="tab-content">
+        <h2>Glossary</h2>
+        <p class="muted">Search election terms in plain language.</p>
+        <input id="searchInput" class="search-box" type="text" placeholder="Search terms, e.g., absentee ballot">
+        <div id="glossaryList" class="glossary-list"></div>
+      </section>
+
+      <section id="leaders" class="tab-content">
+        <h2>Current Leaders</h2>
+        <p class="muted">Key current leaders for Andhra Pradesh and India.</p>
+        <div id="leadersList" class="leader-grid"></div>
+        <div class="update-note" id="leadersUpdated"></div>
+        <p class="muted">Please verify updates on official government websites, as positions may change.</p>
+      </section>
+
+      <section id="admin" class="tab-content">
+        <h2>Admin Update Panel</h2>
+        <p class="muted">Update election windows and leaders without editing code. Data is saved in this browser.</p>
+
+        <div class="admin-panel">
+          <h3>Election Dates (Expected)</h3>
+          <div class="form-grid">
+            <input id="apAssemblyDateInput" type="date" aria-label="AP Assembly date">
+            <input id="lokSabhaDateInput" type="date" aria-label="Lok Sabha date">
+          </div>
+          <div class="admin-actions">
+            <button id="saveDatesBtn" class="mini-btn primary">Save Election Dates</button>
+          </div>
+        </div>
+
+        <div class="admin-panel">
+          <h3>Add Leader</h3>
+          <div class="form-grid">
+            <input id="leaderRoleInput" type="text" placeholder="Role (e.g., Chief Minister)">
+            <input id="leaderNameInput" type="text" placeholder="Name">
+            <input id="leaderScopeInput" type="text" placeholder="Scope (e.g., Andhra Pradesh)">
+            <input id="leaderLinkInput" type="url" placeholder="Official link (optional)">
+          </div>
+          <div class="admin-actions">
+            <button id="addLeaderBtn" class="mini-btn primary">Add Leader</button>
+            <button id="resetLeadersBtn" class="mini-btn">Reset Leaders</button>
+          </div>
+          <div id="adminLeadersList" class="admin-list"></div>
+        </div>
+      </section>
+    </section>
+
+    <p class="footer-note">
+      Andhra Pradesh focus: verify the latest deadlines and eligibility on the CEO Andhra Pradesh and ECI official websites.
+    </p>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll(".tab-btn");
+    const contents = document.querySelectorAll(".tab-content");
+    const heroJumpButtons = document.querySelectorAll("[data-goto]");
+
+    function openTab(target) {
+      tabs.forEach((t) => t.classList.remove("active"));
+      contents.forEach((c) => c.classList.remove("active"));
+      const nextTab = document.querySelector(`.tab-btn[data-tab="${target}"]`);
+      if (nextTab) nextTab.classList.add("active");
+      const section = document.getElementById(target);
+      if (section) section.classList.add("active");
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => openTab(tab.dataset.tab));
+    });
+
+    heroJumpButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        openTab(btn.dataset.goto);
+        document.querySelector(".app-card").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    const processSteps = [
+      "Check voter eligibility for Andhra Pradesh",
+      "Register to vote before Andhra Pradesh deadlines",
+      "Verify your registration status on official AP portals",
+      "Review candidates and key issues",
+      "Choose a voting method (in-person/mail/early)",
+      "Prepare required ID and documents",
+      "Cast your ballot and confirm submission"
+    ];
+
+    const stepList = document.getElementById("stepList");
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+    const savedSteps = JSON.parse(localStorage.getItem("electionSteps") || "[]");
+
+    function renderSteps() {
+      stepList.innerHTML = "";
+      processSteps.forEach((step, index) => {
+        const item = document.createElement("div");
+        item.className = "step-item";
+        const checked = savedSteps.includes(index);
+        if (checked) item.classList.add("completed");
+
+        item.innerHTML = `
+          <input type="checkbox" id="step-${index}" ${checked ? "checked" : ""}>
+          <label for="step-${index}">${index + 1}. ${step}</label>
+        `;
+        stepList.appendChild(item);
+
+        const checkbox = item.querySelector("input");
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) {
+            if (!savedSteps.includes(index)) savedSteps.push(index);
+            item.classList.add("completed");
+          } else {
+            const pos = savedSteps.indexOf(index);
+            if (pos > -1) savedSteps.splice(pos, 1);
+            item.classList.remove("completed");
+          }
+          localStorage.setItem("electionSteps", JSON.stringify(savedSteps));
+          updateProgress();
+        });
+      });
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const percent = Math.round((savedSteps.length / processSteps.length) * 100);
+      progressBar.style.width = percent + "%";
+      progressText.textContent = `${percent}% complete (${savedSteps.length}/${processSteps.length} steps)`;
+    }
+
+    const timelineEvents = [
+      { date: "T-90 Days", title: "Voter Registration Opens", info: "Citizens can register or update voter details." },
+      { date: "T-30 Days", title: "Registration Deadline", info: "Final date for Andhra Pradesh voter registration updates." },
+      { date: "T-20 Days", title: "Early Voting Starts", info: "Approved Andhra Pradesh early voting centers begin operations." },
+      { date: "T-10 Days", title: "Mail Ballot Request Deadline", info: "Last chance to request absentee or mail ballots." },
+      { date: "T-1 Day", title: "Final Information Check", info: "Verify polling station, time, and required documents." },
+      { date: "Election Day", title: "Cast Your Vote", info: "Vote in person or ensure your mail ballot is submitted correctly in Andhra Pradesh." }
+    ];
+
+    const timelineList = document.getElementById("timelineList");
+    timelineEvents.forEach((event) => {
+      const block = document.createElement("div");
+      block.className = "event";
+      block.innerHTML = `
+        <div class="date">${event.date}</div>
+        <strong>${event.title}</strong>
+        <div class="muted">${event.info}</div>
+      `;
+      timelineList.appendChild(block);
+    });
+
+    const quizData = [
+      {
+        q: "What should you do first before planning to vote?",
+        options: ["Wait for election day", "Check eligibility and register", "Watch campaign ads only", "Choose a candidate first"],
+        answer: 1
+      },
+      {
+        q: "Why should you verify your voter registration status?",
+        options: ["To change the election date", "To confirm your details are valid and active", "To skip ID checks", "To avoid researching candidates"],
+        answer: 1
+      },
+      {
+        q: "What does early voting mean?",
+        options: ["Voting after results are out", "Voting before election day at official centers", "Voting through social media", "Practice voting without counting"],
+        answer: 1
+      },
+      {
+        q: "Where should you verify official deadlines and rules?",
+        options: ["Random online posts", "Group chats", "Official election authority websites", "Any blog article"],
+        answer: 2
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = false;
+
+    const quizArea = document.getElementById("quizArea");
+    const nextBtn = document.getElementById("nextBtn");
+    const restartBtn = document.getElementById("restartBtn");
+
+    function renderQuestion() {
+      answered = false;
+      nextBtn.disabled = true;
+
+      if (currentQuestion >= quizData.length) {
+        quizArea.innerHTML = `
+          <h3>Quiz Complete</h3>
+          <p>You scored <strong>${score}/${quizData.length}</strong>.</p>
+          <p class="muted">${score === quizData.length ? "Excellent. You are election-ready." : "Great try. Revisit the Process and Timeline tabs for a quick refresh."}</p>
+        `;
+        return;
+      }
+
+      const item = quizData[currentQuestion];
+      quizArea.innerHTML = `
+        <div><strong>Question ${currentQuestion + 1} of ${quizData.length}</strong></div>
+        <p>${item.q}</p>
+        <div class="quiz-options">
+          ${item.options.map((opt, idx) => `<button data-idx="${idx}">${opt}</button>`).join("")}
+        </div>
+        <div id="feedback" class="feedback"></div>
+      `;
+
+      const optionButtons = quizArea.querySelectorAll(".quiz-options button");
+      const feedback = document.getElementById("feedback");
+
+      optionButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          if (answered) return;
+          answered = true;
+          const selected = Number(btn.dataset.idx);
+          const correct = item.answer;
+
+          optionButtons.forEach((b) => {
+            b.disabled = true;
+            if (Number(b.dataset.idx) === correct) {
+              b.style.borderColor = "#34d399";
+              b.style.background = "rgba(52, 211, 153, 0.16)";
+            }
+          });
+
+          if (selected === correct) {
+            score++;
+            feedback.textContent = "Correct. Nice work.";
+            feedback.className = "feedback correct";
+          } else {
+            btn.style.borderColor = "#f87171";
+            btn.style.background = "rgba(248, 113, 113, 0.14)";
+            feedback.textContent = "Not correct. The right answer is highlighted.";
+            feedback.className = "feedback wrong";
+          }
+
+          nextBtn.disabled = false;
+        });
+      });
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      renderQuestion();
+    });
+
+    restartBtn.addEventListener("click", () => {
+      currentQuestion = 0;
+      score = 0;
+      renderQuestion();
+    });
+
+    const glossary = [
+      { term: "Absentee Ballot", definition: "A ballot used by voters who cannot vote in person, often submitted by mail." },
+      { term: "Ballot", definition: "The official document or electronic form used to record your vote." },
+      { term: "Constituency", definition: "A geographic area represented by an elected official." },
+      { term: "Election Commission", definition: "The authority that organizes and supervises election procedures." },
+      { term: "Manifesto", definition: "A public statement of policies and goals by a political party or candidate." },
+      { term: "Polling Booth", definition: "The official location where voters cast ballots in person." },
+      { term: "Voter ID", definition: "Accepted identification used to verify a voter at the polling location." },
+      { term: "Voter Registration", definition: "The process of getting your name added to the voter list." }
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const glossaryList = document.getElementById("glossaryList");
+    const leadersList = document.getElementById("leadersList");
+    const leadersUpdated = document.getElementById("leadersUpdated");
+    const liveGrid = document.getElementById("liveGrid");
+    const apAssemblyDateInput = document.getElementById("apAssemblyDateInput");
+    const lokSabhaDateInput = document.getElementById("lokSabhaDateInput");
+    const saveDatesBtn = document.getElementById("saveDatesBtn");
+    const leaderRoleInput = document.getElementById("leaderRoleInput");
+    const leaderNameInput = document.getElementById("leaderNameInput");
+    const leaderScopeInput = document.getElementById("leaderScopeInput");
+    const leaderLinkInput = document.getElementById("leaderLinkInput");
+    const addLeaderBtn = document.getElementById("addLeaderBtn");
+    const resetLeadersBtn = document.getElementById("resetLeadersBtn");
+    const adminLeadersList = document.getElementById("adminLeadersList");
+
+    function renderGlossary(filter = "") {
+      glossaryList.innerHTML = "";
+      const q = filter.trim().toLowerCase();
+      const entries = glossary.filter(
+        (item) => item.term.toLowerCase().includes(q) || item.definition.toLowerCase().includes(q)
+      );
+
+      if (!entries.length) {
+        glossaryList.innerHTML = "<p class='muted'>No matching terms found.</p>";
+        return;
+      }
+
+      entries.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "term";
+        card.innerHTML = `<h3>${item.term}</h3><p>${item.definition}</p>`;
+        glossaryList.appendChild(card);
+      });
+    }
+
+    searchInput.addEventListener("input", (e) => {
+      renderGlossary(e.target.value);
+    });
+
+    const DEFAULT_LEADERS = [
+      { role: "Chief Minister", name: "N. Chandrababu Naidu", scope: "Andhra Pradesh", link: "https://www.ap.gov.in/" },
+      { role: "Governor", name: "S. Abdul Nazeer", scope: "Andhra Pradesh", link: "https://www.rajbhavan.ap.gov.in/" },
+      { role: "Chief Electoral Officer", name: "Mukesh Kumar Meena", scope: "Andhra Pradesh", link: "https://ceoandhra.nic.in/" },
+      { role: "Deputy Chief Minister", name: "Pawan Kalyan", scope: "Andhra Pradesh", link: "https://www.ap.gov.in/" },
+      { role: "Prime Minister", name: "Narendra Modi", scope: "India", link: "https://www.pmindia.gov.in/" },
+      { role: "President", name: "Droupadi Murmu", scope: "India", link: "https://presidentofindia.nic.in/" }
+    ];
+
+    const DEFAULT_WINDOWS = [
+      {
+        key: "apAssembly",
+        label: "Andhra Pradesh Assembly (Expected)",
+        targetDate: "2029-06-10",
+        note: "Expected window near end of current assembly term.",
+        link: "https://ceoandhra.nic.in/"
+      },
+      {
+        key: "lokSabha",
+        label: "Lok Sabha (Expected)",
+        targetDate: "2029-05-15",
+        note: "Expected national election window, subject to ECI notification.",
+        link: "https://eci.gov.in/"
+      }
+    ];
+
+    function loadStoredArray(key, fallback) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || "null");
+        return Array.isArray(parsed) ? parsed : fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    let leadersData = loadStoredArray("sb_leaders", DEFAULT_LEADERS);
+    let electionWindows = loadStoredArray("sb_windows", DEFAULT_WINDOWS);
+
+    function renderLeaders() {
+      leadersList.innerHTML = "";
+      leadersData.forEach((leader) => {
+        const card = document.createElement("div");
+        card.className = "leader-card";
+        card.innerHTML = `
+          <div class="role">${leader.role}</div>
+          <div class="name">${leader.name}</div>
+          <div class="scope">${leader.scope}</div>
+          ${leader.link ? `<a class="ref-link" href="${leader.link}" target="_blank" rel="noopener noreferrer">Official Source</a>` : ""}
+        `;
+        leadersList.appendChild(card);
+      });
+      leadersUpdated.textContent = `Leader list last updated: ${new Date().toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" })}`;
+    }
+
+    function formatCountdown(targetDate) {
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff <= 0) return "In progress / date reached";
+      const totalMinutes = Math.floor(diff / 60000);
+      const days = Math.floor(totalMinutes / (60 * 24));
+      const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+      const minutes = totalMinutes % 60;
+      return `${days}d ${hours}h ${minutes}m`;
+    }
+
+    function getElectionStatus(targetDate) {
+      const now = new Date();
+      const diff = targetDate - now;
+      const oneDayMs = 24 * 60 * 60 * 1000;
+      if (Math.abs(diff) <= oneDayMs) return { label: "ONGOING", className: "status-ongoing" };
+      if (diff > oneDayMs) return { label: "UPCOMING", className: "status-upcoming" };
+      return { label: "COMPLETED", className: "status-completed" };
+    }
+
+    function parseTargetDate(dateString) {
+      return new Date(`${dateString}T08:00:00+05:30`);
+    }
+
+    function renderAdminLeaders() {
+      adminLeadersList.innerHTML = "";
+      leadersData.forEach((leader, index) => {
+        const row = document.createElement("div");
+        row.className = "admin-row";
+        row.innerHTML = `
+          <div>
+            <strong>${leader.role}</strong> - ${leader.name}
+            <div class="meta">${leader.scope}</div>
+          </div>
+          <button class="mini-btn" data-delete-leader="${index}">Delete</button>
+        `;
+        adminLeadersList.appendChild(row);
+      });
+    }
+
+    function syncAdminDateInputs() {
+      const ap = electionWindows.find((item) => item.key === "apAssembly");
+      const ls = electionWindows.find((item) => item.key === "lokSabha");
+      apAssemblyDateInput.value = ap ? ap.targetDate : "";
+      lokSabhaDateInput.value = ls ? ls.targetDate : "";
+    }
+
+    function renderLiveElection() {
+      const nowInAp = new Date().toLocaleString("en-IN", {
+        dateStyle: "full",
+        timeStyle: "medium",
+        timeZone: "Asia/Kolkata"
+      });
+
+      const liveCards = [
+        {
+          title: "Andhra Pradesh Time (IST)",
+          value: nowInAp,
+          sub: "Realtime local civic time",
+          status: { label: "LIVE", className: "status-live" },
+          link: "https://ceoandhra.nic.in/"
+        },
+        ...electionWindows.map((election) => ({
+          title: election.label,
+          value: formatCountdown(parseTargetDate(election.targetDate)),
+          sub: election.note,
+          status: getElectionStatus(parseTargetDate(election.targetDate)),
+          link: election.link
+        }))
+      ];
+
+      liveGrid.innerHTML = "";
+      liveCards.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "live-card";
+        card.innerHTML = `
+          <div class="live-head">
+            <h3>${item.title}</h3>
+            <span class="status-badge ${item.status.className}">${item.status.label}</span>
+          </div>
+          <div class="live-value">${item.value}</div>
+          <div class="live-sub">${item.sub}</div>
+          ${item.link ? `<a class="ref-link" href="${item.link}" target="_blank" rel="noopener noreferrer">Official Link</a>` : ""}
+        `;
+        liveGrid.appendChild(card);
+      });
+    }
+
+    saveDatesBtn.addEventListener("click", () => {
+      electionWindows = electionWindows.map((item) => {
+        if (item.key === "apAssembly" && apAssemblyDateInput.value) {
+          return { ...item, targetDate: apAssemblyDateInput.value };
+        }
+        if (item.key === "lokSabha" && lokSabhaDateInput.value) {
+          return { ...item, targetDate: lokSabhaDateInput.value };
+        }
+        return item;
+      });
+      localStorage.setItem("sb_windows", JSON.stringify(electionWindows));
+      renderLiveElection();
+    });
+
+    addLeaderBtn.addEventListener("click", () => {
+      const role = leaderRoleInput.value.trim();
+      const name = leaderNameInput.value.trim();
+      const scope = leaderScopeInput.value.trim();
+      const link = leaderLinkInput.value.trim();
+      if (!role || !name || !scope) return;
+
+      leadersData.push({ role, name, scope, link });
+      localStorage.setItem("sb_leaders", JSON.stringify(leadersData));
+      renderLeaders();
+      renderAdminLeaders();
+      leaderRoleInput.value = "";
+      leaderNameInput.value = "";
+      leaderScopeInput.value = "";
+      leaderLinkInput.value = "";
+    });
+
+    adminLeadersList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-delete-leader]");
+      if (!button) return;
+      const index = Number(button.dataset.deleteLeader);
+      if (Number.isNaN(index)) return;
+      leadersData.splice(index, 1);
+      localStorage.setItem("sb_leaders", JSON.stringify(leadersData));
+      renderLeaders();
+      renderAdminLeaders();
+    });
+
+    resetLeadersBtn.addEventListener("click", () => {
+      leadersData = [...DEFAULT_LEADERS];
+      localStorage.setItem("sb_leaders", JSON.stringify(leadersData));
+      renderLeaders();
+      renderAdminLeaders();
+    });
+
+    renderSteps();
+    renderQuestion();
+    renderGlossary();
+    renderLeaders();
+    renderAdminLeaders();
+    syncAdminDateInputs();
+    renderLiveElection();
+    setInterval(renderLiveElection, 1000);
+  </script>
+</body>
+</html>
